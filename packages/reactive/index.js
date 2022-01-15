@@ -1,3 +1,5 @@
+
+// reactive
 let currentTarget = null;
 
 class Dep {
@@ -8,12 +10,12 @@ class Dep {
 
     depend() {
         if (currentTarget !== null) {
-            this._subscribers.add(currentTarget); 
+            this._subscribers.add(currentTarget);
         }
     }
 
     notify() {
-        for(let subscriber of this._subscribers) {
+        for (let subscriber of this._subscribers) {
             subscriber();
         }
     }
@@ -35,7 +37,7 @@ function getDep(target, key) {
     return dep;
 }
 
-function reactive(raw) {
+export function reactive(raw) {
     return new Proxy(raw, {
         get(target, key, receiver) {
             const dep = getDep(target, key);
@@ -51,20 +53,8 @@ function reactive(raw) {
     })
 }
 
-function watchEffect(effect) {
+export function watchEffect(effect) {
     currentTarget = effect;
     effect();
     currentTarget = null;
 }
-
-let vm = reactive({
-    count: 0,
-});
-
-watchEffect(() => {
-    console.log('called', vm.count);
-});
-
-vm.count++;
-// 0
-// 1

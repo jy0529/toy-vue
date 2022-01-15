@@ -1,0 +1,27 @@
+{
+  "name": "@toy-vue/runtime",
+  "version": "0.0.1",
+  "description": "toy-vue runtime",
+  "files": ["dist"],
+  "main": "./dist/toy-vue-runtime.umd.js",
+  "module": "./dist/toy-vue-runtime.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/toy-vue-runtime.es.js",
+      "require": "./dist/toy-vue-runtime.umd.js"
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build"
+  },
+  "author": "Jy",
+  "license": "MIT",
+  "dependencies": {
+    "@toy-vue/reactive": "workspace:^0.0.1"
+  },
+  "devDependencies": {
+    "vite": "^2.7.12"
+  }
+}

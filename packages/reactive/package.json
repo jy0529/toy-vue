@@ -1,0 +1,24 @@
+{
+  "name": "@toy-vue/reactive",
+  "version": "0.0.1",
+  "description": "toy-vue reactive",
+  "files": ["dist"],
+  "main": "./dist/toy-vue-reactive.umd.js",
+  "module": "./dist/toy-vue-reactive.es.js",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/toy-vue-reactive.es.js",
+      "require": "./dist/toy-vue-reactive.umd.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build"
+  },
+  "author": "Jy",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^2.7.12"
+  }
+}

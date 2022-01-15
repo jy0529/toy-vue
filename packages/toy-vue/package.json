@@ -1,0 +1,28 @@
+{
+  "name": "toy-vue",
+  "version": "0.0.1",
+  "description": "toy-vue",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/toy-vue.umd.js",
+  "module": "./dist/toy-vue.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/toy-vue.es.js",
+      "require": "./dist/toy-vue.umd.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build"
+  },
+  "author": "Jy",
+  "license": "MIT",
+  "dependencies": {
+    "@toy-vue/runtime": "workspace:^0.0.1"
+  },
+  "devDependencies": {
+    "vite": "^2.7.12"
+  }
+}

@@ -1,3 +1,5 @@
+import { watchEffect } from '@toy-vue/reactive';
+
 function createElement(tag, props, children) {
     return {
         tag,
@@ -5,15 +7,19 @@ function createElement(tag, props, children) {
         children,
     };
 }
-const h = createElement;
+export const h = createElement;
 
-function mount(vdom, container) {
+export function mount(vdom, container) {
     const el = vdom.el = document.createElement(vdom.tag);
     // props
     if (vdom.props) {
         for (let prop in vdom.props) {
             // ignore eventListeners
-            el.setAttribute(prop, vdom.props[prop]);
+            if (prop.startsWith('on')) {
+                el.addEventListener(prop.slice(2).toLowerCase(), vdom.props[prop]);
+            } else {
+                el.setAttribute(prop, vdom.props[prop]);
+            }
         }
     }
     // children
@@ -28,27 +34,16 @@ function mount(vdom, container) {
     container.appendChild(el);
 }
 
-let vDom = h('div', null, [
-    h('span', { class: 'red' }, [
-        h('span', { class: 'red' }, 'hello vue')
-    ])
-]);
-mount(vDom, document.getElementById('app'));
-
-let vDom1 = h('div', null, [h('span', {
-    class: 'green'
-}, 'hello vue')]);
-
-function patch(vDom1, vDom2) {
+export function patch(vDom1, vDom2) {
     let el = vDom2.el = vDom1.el;
     if (vDom1.tag === vDom2.tag) {
         // props changed
         // 1. update
         // 2. remove
-        for(let newProp in vDom2.props) {
+        for (let newProp in vDom2.props) {
             el.setAttribute(newProp, vDom2.props[newProp]);
         }
-        for(let oldProp in vDom1.props) {
+        for (let oldProp in vDom1.props) {
             if (!oldProp in vDom2.props) {
                 el.removeAttribute(oldProp);
             }
@@ -64,7 +59,7 @@ function patch(vDom1, vDom2) {
                 //  1. diff
                 //  2. children length not equal, add or remove
                 let minLength = Math.min(vDom1.children.length, vDom2.children.length);
-                for(let i = 0; i < minLength; i++) {
+                for (let i = 0; i < minLength; i++) {
                     patch(vDom1.children[i], vDom2.children[i]);
                 }
                 if (vDom2.children.length > vDom1.children.length) {
@@ -93,4 +88,21 @@ function patch(vDom1, vDom2) {
         vDom1.el.replaceWith(vDom2.el);
     }
 }
-patch(vDom, vDom1);
+
+export function createApp(component, container) {
+    let isMounted = false;
+    let prevVDom = null;
+    watchEffect(() => {
+        if (!isMounted) {
+            prevVDom = component.render();
+            mount(prevVDom, container);
+            isMounted = true;
+        } else {
+            let currentVDom = component.render();
+            patch(prevVDom, currentVDom);
+            prevVDom = currentVDom;
+        }
+    });
+}
+
+export * from '@toy-vue/reactive';
